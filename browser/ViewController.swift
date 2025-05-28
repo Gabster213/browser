@@ -1,0 +1,19 @@
+//
+//  ViewController.swift
+//  browser
+//
+//  Created by Gabriel Millatiner on 28/05/2025.
+//
+
+import UIKit
+
+class ViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+    }
+
+
+}
+
