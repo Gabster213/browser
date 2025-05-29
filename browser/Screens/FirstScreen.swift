@@ -26,7 +26,7 @@ class FirstScreen: UIViewController {
 
         setupLayoutConstraints()
 
-        let url = URL(string: "https://www.wikipedia.org")!
+        let url = URL(string: "https://www.google.com")!
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }
