@@ -22,18 +22,7 @@ class FirstScreen: UIViewController, WKNavigationDelegate {
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
-        // Activate constraints for addressBar and webView here
-        NSLayoutConstraint.activate([
-            addressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            addressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            addressBar.heightAnchor.constraint(equalToConstant: 40),
-
-            webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 8),
-            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) // webView now goes to bottom
-        ])
+        setupLayoutConstraints()
 
         let url = URL(string: "https://www.wikipedia.org")!
         webView.load(URLRequest(url: url))
@@ -46,6 +35,21 @@ class FirstScreen: UIViewController, WKNavigationDelegate {
         webView.navigationDelegate = self
         view.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    private func setupLayoutConstraints() {
+        // Activate constraints for addressBar and webView here
+        NSLayoutConstraint.activate([
+            addressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            addressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            addressBar.heightAnchor.constraint(equalToConstant: 40),
+
+            webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 8),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) // webView now goes to bottom
+        ])
     }
 
     func setupAddressBar() {
@@ -70,7 +74,34 @@ class FirstScreen: UIViewController, WKNavigationDelegate {
         view.addSubview(addressBar)
         addressBar.translatesAutoresizingMaskIntoConstraints = false
     }
-    /*
+    
+    @objc func loadURLFromAddressBar() {
+        guard var inputText = addressBar.text, !inputText.isEmpty else { return }
+        // Check if the input text has a scheme, if not, prepend https://
+        if !inputText.lowercased().hasPrefix("http://") && !inputText.lowercased().hasPrefix("https://") {
+            inputText = "https://" + inputText
+        }
+        guard let url = URL(string: inputText) else { 
+            print("Error: Could not create URL from \(inputText)")
+            return 
+        }
+        print("Loading url \(url) from address bar ")
+        webView.load(URLRequest(url: url))
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        addressBar.text = webView.url?.absoluteString
+    }
+
+    @objc func goToNextScreen() {
+        let nextScreen = SecondScreen()
+        nextScreen.title = "Second Screen"
+        navigationController?.pushViewController(nextScreen, animated: true)
+    }
+}
+
+
+/*
     func setupNextButton() {
         view.addSubview(nextButton)
         nextButton.configuration = .filled()
@@ -99,28 +130,3 @@ class FirstScreen: UIViewController, WKNavigationDelegate {
         ])
     }
     */
-
-    @objc func loadURLFromAddressBar() {
-        guard var inputText = addressBar.text, !inputText.isEmpty else { return }
-        // Check if the input text has a scheme, if not, prepend https://
-        if !inputText.lowercased().hasPrefix("http://") && !inputText.lowercased().hasPrefix("https://") {
-            inputText = "https://" + inputText
-        }
-        guard let url = URL(string: inputText) else { 
-            print("Error: Could not create URL from \(inputText)")
-            return 
-        }
-        print("Loading url \(url) from address bar ")
-        webView.load(URLRequest(url: url))
-    }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        addressBar.text = webView.url?.absoluteString
-    }
-
-    @objc func goToNextScreen() {
-        let nextScreen = SecondScreen()
-        nextScreen.title = "Second Screen"
-        navigationController?.pushViewController(nextScreen, animated: true)
-    }
-}
