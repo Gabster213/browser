@@ -17,16 +17,18 @@ class FirstScreen: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "First Screen"
+        // title = "First Screen"
         setupAddressBar()
         setupWebView()
         // setupNextButton()
         navigationController?.navigationBar.prefersLargeTitles = true
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemBackground 
+        // addressBar.backgroundColor = .blue   // Address bar background
+        // webView.backgroundColor = .green     // WebView background (content may obscure this)
 
         setupLayoutConstraints()
 
-        let url = URL(string: "https://www.google.com")!
+        let url = URL(string: "https://www.duckduckgo.com")!
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }
@@ -42,15 +44,15 @@ class FirstScreen: UIViewController {
     private func setupLayoutConstraints() {
         // Activate constraints for addressBar and webView here
         NSLayoutConstraint.activate([
-            addressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            addressBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             addressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             addressBar.heightAnchor.constraint(equalToConstant: 40),
 
-            webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 8),
+            webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 0),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) // webView now goes to bottom
+            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
