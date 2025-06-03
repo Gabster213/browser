@@ -14,18 +14,26 @@ class FirstScreen: UIViewController {
     let nextButton = UIButton()
     var webView: WKWebView!
     var addressBar: UITextField!
+    
+    lazy var notAllowedAlert: UIAlertController = { let alert = UIAlertController(title: "Navigation Blocked", message: "Access to this website is not allowed.", preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in NSLog("The \"OK\" navigation blocked alert occurred.") }))
+    alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: {_ in NSLog("The \"Cancel\" navigation blocked alert occurred.")}))
+    return alert
+        }()
+    
+    let notAllowedURLs: [URL] = [
+        URL(string: "https://ynet.co.il")!,
+        URL(string: "https://google.com")!
+    ]
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // title = "First Screen"
         setupAddressBar()
         setupWebView()
         // setupNextButton()
         navigationController?.navigationBar.prefersLargeTitles = true
-        view.backgroundColor = .systemBackground 
-        // addressBar.backgroundColor = .blue   // Address bar background
-        // webView.backgroundColor = .green     // WebView background (content may obscure this)
-
+        view.backgroundColor = .systemBackground
         setupLayoutConstraints()
 
         let url = URL(string: "https://www.duckduckgo.com")!
@@ -46,7 +54,7 @@ class FirstScreen: UIViewController {
         NSLayoutConstraint.activate([
             addressBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             addressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+             addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             addressBar.heightAnchor.constraint(equalToConstant: 40),
 
             webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 0),
