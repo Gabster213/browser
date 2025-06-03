@@ -52,9 +52,9 @@ class FirstScreen: UIViewController {
     private func setupLayoutConstraints() {
         // Activate constraints for addressBar and webView here
         NSLayoutConstraint.activate([
-            addressBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            addressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -20),
             addressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-             addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             addressBar.heightAnchor.constraint(equalToConstant: 40),
 
             webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 0),
