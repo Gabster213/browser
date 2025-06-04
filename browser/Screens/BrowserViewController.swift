@@ -10,7 +10,7 @@ import WebKit
 
 
 // Being extended by FirstScreen+WKNavigationDelegate.swift
-class FirstScreen: UIViewController {
+class BrowserViewController: UIViewController {
     var webView: WKWebView!
     var addressBar: UITextField!
     

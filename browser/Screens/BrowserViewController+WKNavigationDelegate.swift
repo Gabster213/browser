@@ -1,5 +1,5 @@
 //
-//  FirstScreen+WKNavigationDelegate.swift
+//  BrowserViewController+WKNavigationDelegate.swift
 //  browser
 //
 
@@ -27,7 +27,7 @@ extension URL {
 }
 
 
-extension FirstScreen: WKNavigationDelegate {
+extension BrowserViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let url = webView.url // Ideally, would be a field on the class (updates on navigation)
