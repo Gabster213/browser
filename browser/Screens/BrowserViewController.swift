@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 
+let duckduckGoUrl = URL(string: "https://duckduckgo.com")!
 
 // Being extended by FirstScreen+WKNavigationDelegate.swift
 class BrowserViewController: UIViewController {
@@ -34,8 +35,7 @@ class BrowserViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupLayoutConstraints()
 
-        let url = URL(string: "https://www.duckduckgo.com")!
-        webView.load(URLRequest(url: url))
+        webView.load(URLRequest(url: duckduckGoUrl))
         webView.allowsBackForwardNavigationGestures = true
     }
 
@@ -99,11 +99,5 @@ class BrowserViewController: UIViewController {
         }
         print("Loading url \(url) from address bar ")
         webView.load(URLRequest(url: url))
-    }
-
-    @objc func goToNextScreen() {
-        let nextScreen = SecondScreen()
-        nextScreen.title = "Second Screen"
-        navigationController?.pushViewController(nextScreen, animated: true)
     }
 }
