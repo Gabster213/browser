@@ -5,36 +5,47 @@
 
 import WebKit
 import UIKit
-
 extension URL {
-    /// Returns a normalized host string for comparison, removing "www." and converting to lowercase.
-    var normalizedHost: String? {
-        guard var host = host else { return nil }
-        if host.hasPrefix("www.") {
-            host.removeFirst(4) // Remove "www."
-        }
-        return host.lowercased()
+    var baseDomain: String? {
+        guard let host = self.host?.lowercased() else { return nil }
+        let parts = host.components(separatedBy: ".")
+        // Need at least two components to form a base domain (e.g., example.com)
+        guard parts.count >= 2 else { return nil }
+
+        // Take the last two components (e.g., ["example", "com"] from ["www", "example", "com"])
+        return parts.suffix(2).joined(separator: ".")
     }
 
-    /// Checks if two URLs refer to the same base site, ignoring "www." and scheme.
-    /// - Parameter otherURL: The other URL to compare against.
-    /// - Returns: `true` if both URLs point to the same normalized host, `false` otherwise.
+    /// Checks if two URLs belong to the same base domain.
     func isSame(otherURL: URL) -> Bool {
-        // If either URL doesn't have a host, they cannot be the same site.
-        guard let selfHost = self.normalizedHost,
-              let otherHost = otherURL.normalizedHost else {
-            return false
-        }
-        return selfHost == otherHost
+        return self.baseDomain == otherURL.baseDomain
     }
 }
 
 
 extension FirstScreen: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        let url = webView.url // Ideally, would be a field on the class (updates on navigation)
+        let wikipediaURL = URL(string: "https://wikipedia.org")!
+        setAddressBarTxt(url: url?.absoluteString)
+        if url?.isSame(otherURL: wikipediaURL) ?? false {
+            print("Setting bg color for wikipedia")
+            setPageBgColor()
+        }
+    }
+
+    private func setAddressBarTxt(url: String?) {
         addressBar.text = webView.url?.absoluteString
         print("Successfully loaded: \(webView.url?.absoluteString ?? "No URL")")
     }
+    
+    private func setPageBgColor() {
+        let jsScript = """
+                       document.body.style.background = 'salmon' 
+                       """
+        webView.evaluateJavaScript(jsScript)
+    }
+    
      func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
@@ -44,6 +55,7 @@ extension FirstScreen: WKNavigationDelegate {
                 // If there's no URL, allow it or handle as appropriate for your app
                 decisionHandler(.cancel)
                 self.present(notAllowedAlert, animated: true, completion: nil)
+            notAllowedAlert.dismiss(animated: true)
                 return
             }
         if notAllowedURLs.first(where: { disallowedURL in
@@ -99,4 +111,4 @@ extension FirstScreen: WKNavigationDelegate {
         """
         webView.loadHTMLString(errorMessage, baseURL: nil)
     }
-} 
+}

@@ -11,15 +11,14 @@ import WebKit
 
 // Being extended by FirstScreen+WKNavigationDelegate.swift
 class FirstScreen: UIViewController {
-    let nextButton = UIButton()
     var webView: WKWebView!
     var addressBar: UITextField!
     
-    lazy var notAllowedAlert: UIAlertController = { let alert = UIAlertController(title: "Navigation Blocked", message: "Access to this website is not allowed.", preferredStyle: .alert)
+    var notAllowedAlert: UIAlertController { let alert = UIAlertController(title: "Navigation Blocked", message: "Access to this website is not allowed.", preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in NSLog("The \"OK\" navigation blocked alert occurred.") }))
-    alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: {_ in NSLog("The \"Cancel\" navigation blocked alert occurred.")}))
+    alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: { _ in NSLog("The \"Cancel\" navigation blocked alert occurred.")}))
     return alert
-        }()
+        }
     
     let notAllowedURLs: [URL] = [
         URL(string: "https://ynet.co.il")!,
@@ -31,7 +30,6 @@ class FirstScreen: UIViewController {
         super.viewDidLoad()
         setupAddressBar()
         setupWebView()
-        // setupNextButton()
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
         setupLayoutConstraints()
@@ -88,8 +86,8 @@ class FirstScreen: UIViewController {
     }
     
     @objc func loadURLFromAddressBar() {
-        guard var inputText = addressBar.text, !inputText.isEmpty else { return }
-        // Check if the input text has a scheme, if not, prepend https://
+          guard var inputText = addressBar.text, !inputText.isEmpty else { return }
+          // Check if the input text has a scheme, if not, prepend https://
         if !inputText.lowercased().hasPrefix("http://") && !inputText.lowercased().hasPrefix("https://") {
             inputText = "https://" + inputText
         }
@@ -109,34 +107,3 @@ class FirstScreen: UIViewController {
         navigationController?.pushViewController(nextScreen, animated: true)
     }
 }
-
-
-/*
-    func setupNextButton() {
-        view.addSubview(nextButton)
-        nextButton.configuration = .filled()
-        nextButton.configuration?.background.backgroundColor = .systemPink
-        nextButton.configuration?.title = "Next"
-        nextButton.translatesAutoresizingMaskIntoConstraints = false
-        nextButton.addTarget(self, action: #selector(goToNextScreen), for: .touchUpInside)
-
-        NSLayoutConstraint.deactivate(nextButton.constraints)
-        
-        NSLayoutConstraint.activate([
-            addressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            addressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            addressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            addressBar.heightAnchor.constraint(equalToConstant: 40),
-
-            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nextButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            nextButton.widthAnchor.constraint(equalToConstant: 200),
-            nextButton.heightAnchor.constraint(equalToConstant: 50),
-
-            webView.topAnchor.constraint(equalTo: addressBar.bottomAnchor, constant: 8),
-            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: nextButton.topAnchor, constant: -8)
-        ])
-    }
-    */
