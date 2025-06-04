@@ -49,9 +49,7 @@ extension FirstScreen: WKNavigationDelegate {
     }
     
     private func setPageBgColor() {
-        let jsScript = """
-                       document.body.style.background = 'salmon' 
-                       """
+        let jsScript = "document.body.style.background = 'salmon'"
         webView.evaluateJavaScript(jsScript)
     }
     
