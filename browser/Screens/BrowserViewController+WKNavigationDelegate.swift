@@ -57,12 +57,14 @@ extension BrowserViewController: WKNavigationDelegate {
             decisionHandler(.cancel) 
             return
         }
+        print("Current URL: \(currentURL.absoluteString)")
         if viewModel.isURLBlocked(currentURL) {
             print("Not allowed URL: \(currentURL.absoluteString)")
             decisionHandler(.cancel)
             self.present(notAllowedAlert, animated: true, completion: nil)
+            return
         } else {
-            print("Allowed URL (checked by ViewModel): \(currentURL.absoluteString)")
+            print("Allowed URL: \(currentURL.absoluteString)")
             decisionHandler(.allow)
         }
     }
