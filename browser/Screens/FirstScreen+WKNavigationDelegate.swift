@@ -5,6 +5,10 @@
 
 import WebKit
 import UIKit
+
+
+let wikipediaURL = URL(string: "https://wikipedia.org")!
+
 extension URL {
     var baseDomain: String? {
         guard let host = self.host?.lowercased() else { return nil }
@@ -24,14 +28,19 @@ extension URL {
 
 
 extension FirstScreen: WKNavigationDelegate {
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let url = webView.url // Ideally, would be a field on the class (updates on navigation)
-        let wikipediaURL = URL(string: "https://wikipedia.org")!
         setAddressBarTxt(url: url?.absoluteString)
-        if url?.isSame(otherURL: wikipediaURL) ?? false {
+        if isWikipedia(url: url) {
             print("Setting bg color for wikipedia")
             setPageBgColor()
         }
+    }
+    
+    
+    private func isWikipedia(url: URL?) -> Bool {
+        return url?.isSame(otherURL: wikipediaURL) ?? false
     }
 
     private func setAddressBarTxt(url: String?) {
