@@ -25,11 +25,10 @@ extension URL {
 
 extension BrowserViewController: WKNavigationDelegate {
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        let url = webView.url // Ideally, would be a field on the class (updates on navigation)
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        let url = webView.url // Ideally maybe would move to a field on the class (updates on navigation)
         setAddressBarTxt(url: url?.absoluteString)
         if isWikipedia(url: url) {
-            print("Setting bg color for wikipedia")
             setPageBgColor()
         }
     }
@@ -54,17 +53,15 @@ extension BrowserViewController: WKNavigationDelegate {
         decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
     ) {
         guard let currentURL = navigationAction.request.url else {
-            decisionHandler(.cancel) 
+            decisionHandler(.cancel)
             return
         }
-        print("Current URL: \(currentURL.absoluteString)")
-        if viewModel.isURLBlocked(currentURL) {
-            print("Not allowed URL: \(currentURL.absoluteString)")
-            decisionHandler(.cancel)
+        let isMainFrame = navigationAction.targetFrame?.isMainFrame ?? false
+        if viewModel.isURLBlocked(currentURL) && isMainFrame {
             self.present(notAllowedAlert, animated: true, completion: nil)
+            decisionHandler(.cancel) // product decision whether to actually cancel nav here,or only not display the pop-up
             return
         } else {
-            print("Allowed URL: \(currentURL.absoluteString)")
             decisionHandler(.allow)
         }
     }
