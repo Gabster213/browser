@@ -1,13 +1,6 @@
 import UIKit
 import WebKit
 
-enum NavigationPolicy {
-    case allow // Simply allow navigation
-    case blockAndShowStandardAlert // Block and tell the View to show its standard 'notAllowedAlert'
-    // Future extension:
-    // case blockAndShowCustomAlert(title: String, message: String) // Block and provide custom alert details
-    // case redirectTo(url: URL) // Redirect to a different URL
-}
 class BrowserViewModel {
     private let notAllowedURLs: [URL] = [
         URL(string: "https://ynet.co.il")!,
