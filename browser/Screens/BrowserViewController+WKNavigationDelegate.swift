@@ -13,13 +13,9 @@ extension URL {
     var baseDomain: String? {
         guard let host = self.host?.lowercased() else { return nil }
         let parts = host.components(separatedBy: ".")
-        // Need at least two components to form a base domain (e.g., example.com)
         guard parts.count >= 2 else { return nil }
-
-        // Take the last two components (e.g., ["example", "com"] from ["www", "example", "com"])
         return parts.suffix(2).joined(separator: ".")
     }
-
     /// Checks if two URLs belong to the same base domain.
     func isSame(otherURL: URL) -> Bool {
         return self.baseDomain == otherURL.baseDomain
@@ -38,7 +34,6 @@ extension BrowserViewController: WKNavigationDelegate {
         }
     }
     
-    
     private func isWikipedia(url: URL?) -> Bool {
         return url?.isSame(otherURL: wikipediaURL) ?? false
     }
@@ -52,30 +47,24 @@ extension BrowserViewController: WKNavigationDelegate {
         let jsScript = "document.body.style.background = 'salmon'"
         webView.evaluateJavaScript(jsScript)
     }
-    
+
      func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
     ) {
         guard let currentURL = navigationAction.request.url else {
-                // If there's no URL, allow it or handle as appropriate for your app
-                decisionHandler(.cancel)
-                self.present(notAllowedAlert, animated: true, completion: nil)
-            notAllowedAlert.dismiss(animated: true)
-                return
-            }
-        if notAllowedURLs.first(where: { disallowedURL in
-                currentURL.isSame(otherURL: disallowedURL)
-            }) != nil {
+            decisionHandler(.cancel) 
+            return
+        }
+        if viewModel.isURLBlocked(currentURL) {
             print("Not allowed URL: \(currentURL.absoluteString)")
             decisionHandler(.cancel)
             self.present(notAllowedAlert, animated: true, completion: nil)
-            return
-            }
-        print("Allowed URL: \(currentURL.absoluteString)")
-        decisionHandler(.allow)
-        return
+        } else {
+            print("Allowed URL (checked by ViewModel): \(currentURL.absoluteString)")
+            decisionHandler(.allow)
+        }
     }
 
     // Called when an error occurs while starting to load data for the main frame.
@@ -104,7 +93,6 @@ extension BrowserViewController: WKNavigationDelegate {
         // Avoid reloading error page if it's a cancellation or already showing an error
         let nsError = error as NSError
         if nsError.code == NSURLErrorCancelled { return }
-
         let errorMessage = """
         <html>
         <body>

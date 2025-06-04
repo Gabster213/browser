@@ -14,6 +14,7 @@ let duckduckGoUrl = URL(string: "https://duckduckgo.com")!
 class BrowserViewController: UIViewController {
     var webView: WKWebView!
     var addressBar: UITextField!
+    var viewModel: BrowserViewModel!
     
     var notAllowedAlert: UIAlertController { let alert = UIAlertController(title: "Navigation Blocked", message: "Access to this website is not allowed.", preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in NSLog("The \"OK\" navigation blocked alert occurred.") }))
@@ -21,14 +22,9 @@ class BrowserViewController: UIViewController {
     return alert
         }
     
-    let notAllowedURLs: [URL] = [
-        URL(string: "https://ynet.co.il")!,
-        URL(string: "https://google.com")!
-    ]
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel = BrowserViewModel()
         setupAddressBar()
         setupWebView()
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -41,7 +37,6 @@ class BrowserViewController: UIViewController {
 
     func setupWebView() {
         webView = WKWebView()
-        // webView = WKWebView(frame: .init(x: 0, y:0, width:200, height:200), configuration: .init())
         webView.navigationDelegate = self
         view.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -86,16 +81,11 @@ class BrowserViewController: UIViewController {
     }
     
     @objc func loadURLFromAddressBar() {
-          guard var inputText = addressBar.text, !inputText.isEmpty else { return }
-          // Check if the input text has a scheme, if not, prepend https://
-        if !inputText.lowercased().hasPrefix("http://") && !inputText.lowercased().hasPrefix("https://") {
-            inputText = "https://" + inputText
-        }
-        guard let url = URL(string: inputText) else { 
-            print("Error: Could not create URL from \(inputText)")
-            // Optionally, display an error to the user here if URL is invalid
-            webView.loadHTMLString("<html><body><h1>Invalid URL</h1><p>Could not create a valid URL from the input: \(inputText)</p></body></html>", baseURL: nil)
-            return 
+        let (success, urlStr) = viewModel.processUrl(addressBarText: addressBar.text ?? "")
+        guard let url = URL(string: urlStr) else { return }
+        if !success {
+            webView.loadHTMLString(url.absoluteString, baseURL: nil)
+            return
         }
         print("Loading url \(url) from address bar ")
         webView.load(URLRequest(url: url))
