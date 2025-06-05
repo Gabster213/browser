@@ -5,20 +5,24 @@
 
 import WebKit
 import UIKit
+import DomainParser
 
+let domainParser = try? DomainParser()
 
 let wikipediaURL = URL(string: "https://wikipedia.org")!
 
 extension URL {
     var baseDomain: String? {
-        guard let host = self.host?.lowercased() else { return nil }
-        let parts = host.components(separatedBy: ".")
-        guard parts.count >= 2 else { return nil }
-        return parts.suffix(2).joined(separator: ".")
+        return extractDomain(url: self)
+    }
+    
+    func extractDomain(url: URL) -> String? {
+        guard let host = url.host?.lowercased() else { return nil }
+        return domainParser?.parse(host: host)?.domain
     }
     /// Checks if two URLs belong to the same base domain.
     func isSame(otherURL: URL) -> Bool {
-        return self.baseDomain == otherURL.baseDomain
+        return self.baseDomain == self.extractDomain(url: <#T##URL#>)
     }
 }
 

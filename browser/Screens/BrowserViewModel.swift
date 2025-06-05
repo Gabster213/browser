@@ -21,9 +21,7 @@ class BrowserViewModel {
     }
     
     func isURLBlocked(_ url: URL) -> Bool {
-        if notAllowedURLs.first(where: { disallowedURL in url.isSame(otherURL: disallowedURL) }) != nil {
-            return true
-        }
-        return false
+        let isSame = notAllowedURLs.first(where: { disallowedURL in url.isSame(otherURL: disallowedURL) })
+        return isSame != nil ? true : false
     }
 }
