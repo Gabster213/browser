@@ -22,7 +22,7 @@ extension URL {
     }
     /// Checks if two URLs belong to the same base domain.
     func isSame(otherURL: URL) -> Bool {
-        return self.baseDomain == self.extractDomain(url: <#T##URL#>)
+        return self.baseDomain == extractDomain(url: otherURL)
     }
 }
 
