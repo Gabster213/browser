@@ -14,7 +14,7 @@ let duckduckGoUrl = URL(string: "https://duckduckgo.com")!
 class BrowserViewController: UIViewController {
     var webView: WKWebView!
     var addressBar: UITextField!
-    var viewModel: BrowserViewModelProtocol!
+    var viewModel: BrowserViewModel!
     
     var notAllowedAlert: UIAlertController { let alert = UIAlertController(title: "Navigation Blocked", message: "Access to this website is not allowed.", preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in NSLog("The \"OK\" navigation blocked alert occurred.") }))
@@ -24,7 +24,7 @@ class BrowserViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel = BrowserViewModel()
+        viewModel = BrowserViewModelImpl()
         setupAddressBar()
         setupWebView()
         navigationController?.navigationBar.prefersLargeTitles = true

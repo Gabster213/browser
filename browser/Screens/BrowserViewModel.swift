@@ -1,12 +1,12 @@
 import UIKit
 import WebKit
 
-protocol BrowserViewModelProtocol {
+protocol BrowserViewModel {
     func processUrl(addressBarText url: String?) -> (success: Bool, url: String)
     func isURLBlocked(_ url: URL) -> Bool
 }
 
-class BrowserViewModel : BrowserViewModelProtocol {
+class BrowserViewModelImpl : BrowserViewModel {
     private let notAllowedURLs: [URL] = [
         URL(string: "https://ynet.co.il")!,
         URL(string: "https://google.com")!
