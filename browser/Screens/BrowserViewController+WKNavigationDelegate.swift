@@ -4,9 +4,9 @@ import UIKit
 extension BrowserViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        let url = webView.url // Ideally maybe would move to a field on the class (updates on navigation)
-        setAddressBarTxt(url: url?.absoluteString)
-        if isWikipedia(url: url) {
+        guard let url = webView.url else { return } // Ideally maybe would move to a field on the class (updates on navigation)
+        setAddressBarTxt(url: url.absoluteString)
+        if isRpaEnabled(url: url) {
             setPageBgColor()
         }
     }
