@@ -5,7 +5,7 @@ extension BrowserViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         guard let url = webView.url else { return } // Ideally maybe would move to a field on the class (updates on navigation)
-        setAddressBarTxt(url: url.absoluteString)
+        setAddressBarTxt()
         if isRpaEnabled(url: url) {
             setPageBgColor()
         }

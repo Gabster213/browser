@@ -8,12 +8,10 @@ let rpaTargetUrls : [URL] = [URL(string: "https://ynetnews.com")! , URL(string: 
 // MARK: - Navigation Helpers
 extension BrowserViewController {
     func isRpaEnabled(url: URL) -> Bool {
-        let isEnabled = rpaTargetUrls.contains(where: {maybeRpaUrl in url.isSame(otherURL: maybeRpaUrl)})
-        print("IS ENABLED? : \(isEnabled)")
-        return isEnabled
+        return rpaTargetUrls.contains(where: {maybeRpaUrl in url.isSame(otherURL: maybeRpaUrl)})
     }
 
-    func setAddressBarTxt(url: String?) { // Change `url` param name // TODO
+    func setAddressBarTxt() {
         addressBar.text = webView.url?.absoluteString
         print("Successfully loaded: \(webView.url?.absoluteString ?? "No URL")")
     }
