@@ -13,7 +13,7 @@ class BrowserViewModelImpl : BrowserViewModel {
     ]
     
     func processUrl(addressBarText url: String?) -> (success: Bool, url: String) {
-        guard var inputText = url, !inputText.isEmpty else { return (success: false, url: "") }
+    guard var inputText = url, !inputText.isEmpty else { return (success: false, url: "") }
       if !inputText.lowercased().hasPrefix("http://") && !inputText.lowercased().hasPrefix("https://") {
           inputText = "https://" + inputText
       }
